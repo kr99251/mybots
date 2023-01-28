@@ -4,6 +4,7 @@ import time
 import pyrosim.pyrosim as pyrosim
 import numpy
 import math
+import random
 
 physicsClient = p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -24,14 +25,14 @@ for x in range(1000):
         bodyIndex = robotId,
         jointName = "Torso_BackLeg",
         controlMode = p.POSITION_CONTROL,
-        targetPosition = -math.pi/4.0,
-        maxForce = 500)
+        targetPosition = math.pi*random.random() - math.pi/2,
+        maxForce = 100)
     pyrosim.Set_Motor_For_Joint(
         bodyIndex = robotId,
         jointName = "Torso_FrontLeg",
         controlMode = p.POSITION_CONTROL,
-        targetPosition = math.pi/4.0,
-        maxForce = 500)
+        targetPosition = math.pi*random.random() - math.pi/2,
+        maxForce = 100)
     time.sleep(1/60)
 
 numpy.save("data/backLegSensorVals.npy", backLegSensorValues)
