@@ -4,11 +4,11 @@ import time
 import pyrosim.pyrosim as pyrosim
 import numpy
 
-amplitude = numpy.pi/4
+amplitude = numpy.pi
 frequency = 10
 phaseOffset = 0
 
-amplitude2 = numpy.pi/4
+amplitude2 = numpy.pi
 frequency2 = 10
 phaseOffset2 = 0
 
