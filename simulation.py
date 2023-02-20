@@ -16,23 +16,10 @@ class SIMULATION:
         self.robot = ROBOT()
 
     def Run(self):
-        targetAngles = c.amplitudeBackLeg * numpy.sin(c.frequencyBackLeg * c.targetAngles + c.phaseOffsetBackLeg)
-        targetAngles2 = c.amplitudeFrontLeg * numpy.sin(c.frequencyFrontLeg * c.targetAngles + c.phaseOffsetFrontLeg)
         for x in range(1000):
             p.stepSimulation()
             self.robot.Sense(x)
-            pyrosim.Set_Motor_For_Joint(
-                bodyIndex = self.robot.robotId,
-                jointName = "Torso_BackLeg",
-                controlMode = p.POSITION_CONTROL,
-                targetPosition = targetAngles[x],
-                maxForce = 100)
-            pyrosim.Set_Motor_For_Joint(
-                bodyIndex = self.robot.robotId,
-                jointName = "Torso_FrontLeg",
-                controlMode = p.POSITION_CONTROL,
-                targetPosition = targetAngles2[x],
-                maxForce = 100)
+            self.robot.Act(x)
             time.sleep(1/240)
             
     def __del__(self):
