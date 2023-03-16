@@ -2,22 +2,41 @@ import numpy
 import pyrosim.pyrosim as pyrosim
 import os
 import random
+import time
 
 class SOLUTION:
-    def __init__(self) -> None:
+    def __init__(self, id) -> None:
         self.weights = numpy.random.rand(3, 2)
-        print(self.weights)
         self.weights = self.weights * 2 - 1
-        print(self.weights)
+        self.myId = id
 
     def Evaluate(self, directOrGUI):
         self.Create_World()
         self.Generate_Body()
         self.Generate_Brain()
-        os.system('python simulate.py ' + directOrGUI)
-        f = open("fitness.txt")
+        os.system('python simulate.py ' + directOrGUI + " " + str(self.myId) + " &")
+        fitnessFileName = "fitness" + str(self.myId) + ".txt"
+        f = open(fitnessFileName)
+        while not os.path.exists(fitnessFileName):
+            time.sleep(0.01)
         self.fitness = float(f.read())
         f.close()
+
+    def Start_Simulation(self, directOrGUI):
+        self.Create_World()
+        self.Generate_Body()
+        self.Generate_Brain()
+        os.system('python simulate.py ' + directOrGUI + " " + str(self.myId) + " &")
+
+    def Wait_For_Simulation_To_End(self):
+        fitnessFileName = "fitness" + str(self.myId) + ".txt"
+        while not os.path.exists(fitnessFileName):
+            time.sleep(0.01)
+        time.sleep(0.05)
+        f = open(fitnessFileName)
+        self.fitness = float(f.read())
+        f.close()
+        os.system("rm " + fitnessFileName)
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -34,7 +53,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Generate_Brain(self):
-        pyrosim.Start_NeuralNetwork("brain.nndf")
+        pyrosim.Start_NeuralNetwork("brain" + str(self.myId) + ".nndf")
         pyrosim.Send_Sensor_Neuron(name = 0, linkName = "Torso")
         pyrosim.Send_Sensor_Neuron(name = 1, linkName = "BackLeg")
         pyrosim.Send_Sensor_Neuron(name = 2, linkName = "FrontLeg")
@@ -50,3 +69,6 @@ class SOLUTION:
         randomRow = random.randint(0, 2)
         randomColumn = random.randint(0, 1)
         self.weights[randomRow, randomColumn] = random.random() * 2 - 1
+
+    def Set_ID(self, id):
+        self.myId = id
