@@ -3,7 +3,7 @@ import numpy
 amplitude = numpy.pi/4
 frequency = 1
 offset = 0
-numberOfGenerations = 10
+numberOfGenerations = 50
 populationSize = 10
 numSensorNeurons = 5
 numMotorNeurons = 10
